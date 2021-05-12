@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="index.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ardent Code internship test - Text editor</title>
+  </head>
+  <body id="body" onload="displayText()">
+      <div id="main">
+        <div id="menu">
+          <button class="menu-button" id='button-bold'>
+            <b>B</b>
+          </button>
+          <button class="menu-button" id='button-italic'>
+            <b><i>I</i></b>
+          </button>
+          <button class="menu-button" id='button-bullet'>
+            <b>•</b>
+          </button>
+          <button class="menu-button" id='button-tags'>
+            <b>x</b>
+          </button>
+          <button class="menu-button" id='button-remove'>
+            &#128465;&#65039;
+          </button>
+          <button class="menu-button" id='button-help'>
+            &#129488
+          </button>
+        </div>
+        <div id='text' contenteditable="true"></div>
+        <div id="bottom-buttons">
+          <button id="button-save">Save</button>
+          <button id="button-reset">Reset</button>
+        </div>
+      </div>
+      <script src="index.js"></script>
+  </body>
+</html>

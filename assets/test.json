@@ -1,0 +1,18 @@
+[
+    {
+        "text": "bold",
+        "decorator": ["b", "i"]
+    },
+    {
+        "text": "italic",
+        "decorator": ["i"]
+    },
+    {
+        "text": "bullet1",
+        "decorator": ["li"]
+    },
+    {
+        "text": "normal",
+        "decorator": []
+    }
+]
