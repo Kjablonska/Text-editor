@@ -57,7 +57,9 @@ function getSelectionHtml(dec) {
         sel = window.getSelection();
         if (sel.getRangeAt && sel.rangeCount) {
             range = window.getSelection().getRangeAt(0);
-            html = '<' + dec + '>' + range + '</' + dec + '>'
+            var parent = range.startContainer.nextSibling
+            console.log("startcontainer", parent)
+            var html = '<' + dec + '>' + range + '</' + dec + '>'
             range.deleteContents();
             var el = document.createElement("div");
             el.innerHTML = html;
@@ -66,7 +68,6 @@ function getSelectionHtml(dec) {
                 lastNode = frag.appendChild(node);
             }
             range.insertNode(frag);
-
         }
     }
     // } else if (document.selection && document.selection.createRange) {
@@ -82,32 +83,35 @@ function removeTags() {
         sel = window.getSelection();
         if (sel.getRangeAt && sel.rangeCount) {
             range = window.getSelection().getRangeAt(0);
-            html = range.cloneContents().textContent
-            console.log(html)
+            var html = range.toString();
             range.deleteContents();
             var el = document.createElement("div");
             el.innerHTML = html;
-            console.log(html)
-            var frag = document.createDocumentFragment(), node, lastNode;
-            while ((node = el.firstChild)) {
-                lastNode = frag.appendChild(node);
-            }
-            range.insertNode(frag);
-
+            range.insertNode(el);
         }
     }
 }
 
-
+// TODO: change it so as it won't remove nodes.
 function parseText() {
     let html_text = document.getElementById('text');
     console.log(html_text.firstElementChild.tagName);
     let jsonData = []
 
+
     while (html_text.firstElementChild) {
+        var child = html_text.firstElementChild
         var jsonObject = {}
-        jsonObject["text"] = html_text.firstElementChild.innerHTML
-        jsonObject["decorator"] = html_text.firstElementChild.tagName.toLowerCase()
+        jsonObject["text"] = child.innerHTML.replace(/(<([^>]+)>)/gi, "");
+
+        decorators = []
+        decorators.push(child.tagName.toLowerCase());
+        while (child.firstElementChild) {
+            decorators.push(child.firstElementChild.tagName.toLowerCase())
+            child.removeChild(child.firstElementChild)
+        }
+
+        jsonObject["decorator"] = decorators
         jsonData.push(jsonObject)
         html_text.removeChild(html_text.firstChild);
     }
