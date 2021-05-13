@@ -7,7 +7,6 @@
  *
 ***************************************************/
 
-
 /**************************************************
  *
  * JSON file format:
@@ -17,33 +16,26 @@
  *
 ***************************************************/
 
-
 const express = require('express');
-var cors = require('cors')
+const cors = require('cors')
+
 const app = express();
 app.use(cors({origin: true}))
 app.use(express.json());
 
-const assets_dir = '../assets'
-let file_name = '../assets/test.json'
-
+let file_name = '../assets/text.json'
 const port = 5000;
 
 app.listen(port, () => {
     console.log("server started on port 5000");
 });
 
-
-
 app.get('/text', async (_, res) => {
-    console.log("text")
-    console.log("filename " + file_name)
-
     const fs = require('fs').promises;
-    let r = await fs.readFile(file_name, 'utf8')
+    let text = await fs.readFile(file_name, 'utf8')
         .then(x => JSON.parse(x))
-    console.log(r)
-    res.json(r);
+
+    res.json(text);
 })
 
 
@@ -54,18 +46,10 @@ app.post('/saveText', (req, res) => {
     if (jsonContent !== undefined) {
         fs.writeFile(file_name, jsonContent, 'utf8', function (err) {
             if (err)
-                return console.log("error");
+                res.json(err)
+            res.json("Text saved sucessfully.")
         });
     }
-    res.json("res")
+    res.json("Unable to save text.")
+
 })
-
-const getJsonFile = () => {
-    var files = fs.readdirSync(assets_dir);
-    const path = require('path');
-
-    for(var f in files)
-        if(path.extname(files[f]) === ".json")
-            file_name = file[f]
-
-}

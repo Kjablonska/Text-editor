@@ -1,4 +1,7 @@
-
+/****************************************8
+ * TODO:
+ * change fetch to XMLHttpRequest
+*/
 
 //TODO: https://stackoverflow.com/questions/53987666/using-promise-to-get-over-xhr-returns-pending-promise
 async function loadText() {
@@ -45,9 +48,25 @@ async function displayText() {
 
 }
 
-function resetAllText() {
-    let html_text = document.getElementById('text')
-    html_text.innerHTML = ''
+/**************************************************************
+ * Function for text deletion.
+ * If any text is selected it is removed.
+ * If no text is selected the whole text is removed.
+***************************************************************/
+
+function removeText() {
+    if (window.getSelection()) {
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            sel.removeRange(range)
+            range.deleteContents();
+        }
+        else {
+            let html_text = document.getElementById('text')
+            html_text.innerHTML = ''
+        }
+    }
 }
 
 
@@ -56,69 +75,62 @@ function getSelectionHtml(dec) {
     if (window.getSelection) {
         sel = window.getSelection();
         if (sel.getRangeAt && sel.rangeCount) {
-            range = window.getSelection().getRangeAt(0);
-            var parent = range.startContainer.nextSibling
-            console.log("startcontainer", parent)
+            range = sel.getRangeAt(0);
             var html = '<' + dec + '>' + range + '</' + dec + '>'
             range.deleteContents();
             var el = document.createElement("div");
             el.innerHTML = html;
-            var frag = document.createDocumentFragment(), node, lastNode;
-            while ((node = el.firstChild)) {
+            var frag = document.createDocumentFragment();
+            while (node = el.firstChild)
                 lastNode = frag.appendChild(node);
-            }
+
             range.insertNode(frag);
         }
     }
-    // } else if (document.selection && document.selection.createRange) {
-    //     range = document.selection.createRange();
-    //     range.collapse(false);
-    //     range.pasteHTML(html);
-    // }
 }
 
 function removeTags() {
-    var sel, range, node;
-    if (window.getSelection) {
-        sel = window.getSelection();
-        if (sel.getRangeAt && sel.rangeCount) {
-            range = window.getSelection().getRangeAt(0);
-            var html = range.toString();
-            range.deleteContents();
-            var el = document.createElement("div");
-            el.innerHTML = html;
-            range.insertNode(el);
-        }
-    }
+    let html_text = document.getElementById('text');
+    html_text.innerHTML = html_text.innerText.replaceAll("\n", "")  // Removes new lines which result from bullet points.
+    // var sel, range, node;
 }
 
-// TODO: change it so as it won't remove nodes.
+/**************************************************************
+ * Function for parsing text.
+ * It takes div containing editable text and parses into the structure corresponding to the JSON file.
+***************************************************************/
 function parseText() {
     let html_text = document.getElementById('text');
-    console.log(html_text.firstElementChild.tagName);
     let jsonData = []
 
 
-    while (html_text.firstElementChild) {
-        var child = html_text.firstElementChild
+    for (child of html_text.childNodes) {
         var jsonObject = {}
-        jsonObject["text"] = child.innerHTML.replace(/(<([^>]+)>)/gi, "");
+        if (child.nodeType == Node.TEXT_NODE) {
+            jsonObject["text"] = child.textContent
+            jsonObject["decorator"] = []
+        } else {
+            var jsonObject = {}
+            jsonObject["text"] = child.innerHTML.replace(/(<([^>]+)>)/gi, "");
 
-        decorators = []
-        decorators.push(child.tagName.toLowerCase());
-        while (child.firstElementChild) {
-            decorators.push(child.firstElementChild.tagName.toLowerCase())
-            child.removeChild(child.firstElementChild)
+            decorators = []
+            decorators.push(child.tagName.toLowerCase());
+
+            child_nodes = child.childNodes
+            console.log(child_nodes)
+            for (el of child_nodes)
+                if (el.tagName !== undefined)
+                    decorators.push(el.tagName.toLowerCase())
+
+            jsonObject["decorator"] = decorators
         }
-
-        jsonObject["decorator"] = decorators
         jsonData.push(jsonObject)
-        html_text.removeChild(html_text.firstChild);
     }
 
-    console.log(jsonData)
+    console.log("parse", jsonData)
     return jsonData;
 }
+
 
 function saveText() {
     var parsed_text = parseText();
@@ -140,8 +152,14 @@ function saveText() {
 
 
 function showManual() {
-    var manual = 'Hello! Top menu: Buttons at the bottom: '
-    window.alert(manual)
+    var manual_div = document.getElementById("manual")
+    if (manual_div.innerHTML !== '') {
+        manual_div.innerHTML = ''
+        return
+    }
+
+    var manual = "<p>Hello!</p><p>Top menu buttons:<br><b>B</b> - bolds selected text<br><i>I</i> - makes selected text italic<br>• - adds bullet points<br>trash can icon - removes all text</p><p>Bottom buttons:<br>Save - saves text<br>Reset - undo all the changes untill the last save</p>"
+    manual_div.innerHTML = manual
 }
 
 const boldButton = document.getElementById('button-bold');
@@ -166,7 +184,7 @@ removeTagsButton.addEventListener("click", () => {
 
 const removeAllButton = document.getElementById('button-remove');
 removeAllButton.addEventListener("click", () => {
-    resetAllText();
+    removeText();
 })
 
 const helpButton = document.getElementById('button-help');
@@ -183,25 +201,3 @@ const saveButton = document.getElementById('button-save');
 saveButton.addEventListener("click", () => {
     saveText();
 })
-
-
-// function getSelectionHtml() {
-//   var html = "";
-//   if (typeof window.getSelection != "undefined") {
-//       var sel = window.getSelection();
-//       if (sel.rangeCount) {
-//           var container = document.createElement("div");
-//           for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-//               container.appendChild(sel.getRangeAt(i).cloneContents());
-//           }
-//           html = container.innerHTML;
-//       }
-//   }
-//   // else if (typeof document.selection != "undefined") {
-//   //     if (document.selection.type == "Text") {
-//   //         html = document.selection.createRange().htmlText;
-//   //     }
-//   // }
-//   console.log(html)
-//   return html;
-// }

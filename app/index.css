@@ -20,6 +20,13 @@
     height: 30px;
     border-radius: 4px;
     background-color:white;
+    transition: all ease-in-out 0.1s;
+    cursor: pointer;
+}
+
+.menu-button:hover {
+    border: 1px solid #888;
+    background-color: #ddd;
 }
 
 #menu {
@@ -60,5 +67,17 @@
 }
 
 #button-bullet {
+    border: 1px solid;
+}
+
+#button-tags {
+    border: 1px solid;
+}
+
+#button-remove {
+    border: 1px solid;
+}
+
+#button-help {
     border: 1px solid;
 }
