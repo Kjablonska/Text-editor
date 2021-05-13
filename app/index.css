@@ -1,8 +1,10 @@
 #text {
-    border-style: groove;
-    border: 1px solid;
+    border: 2px solid #888;
     border-radius: 4px;
-    padding: 1%
+    padding: 1%;
+    height: 80vh;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 #main {
