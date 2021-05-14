@@ -1,11 +1,11 @@
 # Text editor
 
-Simple text editor developed using vanilla JS and Node.js.
+Simple text editor developed using vanilla JS and Node.js on the backend side.
 
 # Description
 
 The aim of the project was to develop simple text editor allowing for bolding the text, make it italic and adding bullet points.  
-It reads text saved as a JSON file - see the file structure [here](text-editor/README.md).  
+The text is stored as a JSON file - see the file structure [here](text-editor/README.md).  
 There is a possibility to save the text. In such case, the program parses it into the above JSON structure.  
 
 # Options:
