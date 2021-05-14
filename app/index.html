@@ -1,42 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="index.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="index.css" />
     <title>Ardent Code internship test - Text editor</title>
+    <script>
+      function loadData() {
+        function checkBrowser() {
+          let userAgentString = navigator.userAgent;
+          let IExplorerAgent =
+            userAgentString.indexOf("MSIE") > -1 ||
+            userAgentString.indexOf("rv:") > -1;
+
+          if (IExplorerAgent) {
+            let browser_check = document.getElementById("browser-check");
+            let not_supported_text =
+              "<p>Hello!</p><p>Your web browser is not supported. :( </p>";
+            let not_supported = document.createTextNode(not_supported_text);
+            browser_check.appendChild(not_supported);
+            return false;
+          }
+          return true;
+        }
+
+        if (checkBrowser()) displayText().then();
+        else document.getElementById("main").style.display = "none";
+      }
+    </script>
   </head>
-  <body id="body" onload="displayText()">
-      <div id="main">
-        <div id="browser-check"></div>
-        <div id="menu">
-          <button class="menu-button" title='bold' id='button-bold'>
-            <b>B</b>
-          </button>
-          <button class="menu-button" title='italic' id='button-italic'>
-            <b><i>I</i></b>
-          </button>
-          <button class="menu-button" title='bullet points' id='button-bullet'>
-            <b>•</b>
-          </button>
-          <button class="menu-button" title='remove styles' id='button-tags'>
-            <b>x</b>
-          </button>
-          <button class="menu-button" title='remove all text' id='button-remove'>
-            &#128465;&#65039;
-          </button>
-          <button class="menu-button" title='help' id='button-help'>
-            &#129488;
-          </button>
-        </div>
-        <div id="manual"></div>
-        <div id='text' contenteditable="true"></div>
-        <div id="bottom-buttons">
-          <button id="button-save">Save</button>
-          <button id="button-reset">Reset</button>
-        </div>
+  <body id="body" onload="loadData()">
+    <div id="browser-check"></div>
+    <div id="main">
+      <div id="menu">
+        <button class="menu-button" title="bold" id="button-bold">
+          <b>B</b>
+        </button>
+        <button class="menu-button" title="italic" id="button-italic">
+          <b><i>I</i></b>
+        </button>
+        <button class="menu-button" title="bullet points" id="button-bullet">
+          <b>•</b>
+        </button>
+        <button class="menu-button" title="remove styles" id="button-tags">
+          <b>x</b>
+        </button>
+        <button class="menu-button" title="remove all text" id="button-remove">
+          &#128465;&#65039;
+        </button>
+        <button class="menu-button" title="help" id="button-help">
+          &#129488;
+        </button>
       </div>
-      <script src="index.js"></script>
+      <div id="manual"></div>
+      <div id="text" contenteditable="true"></div>
+      <div id="bottom-buttons">
+        <button id="button-save">Save</button>
+        <button id="button-reset">Reset</button>
+      </div>
+    </div>
+    <script type="text/javascript" src="index.js"></script>
   </body>
 </html>

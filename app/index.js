@@ -1,30 +1,11 @@
-function loadData() {
-    if (checkBrowser)
-        loadText();
-}
-
-function checkBrowser() {
-    let userAgentString = navigator.userAgent;
-    let IExplorerAgent = userAgentString.indexOf("MSIE") > -1 || userAgentString.indexOf("rv:") > -1;
-    if (IExplorerAgent) {
-        let browser_check = document.getElementById("browser-check");
-        let not_supported_text = "<p>Hello!</p><p>Your web browser is not supported. :( </p>";
-        let not_supported = document.createTextNode(not_supported_text);
-        browser_check.appendChild(not_supported);
-        return false;
-    }
-    return true;
-}
-
 async function loadText() {
-    let res = await fetch('http://localhost:5000/text');
+    const res = await fetch('http://localhost:5000/text');
     text = await res.json();
     return text;
 }
 
 async function displayText() {
-    checkBrowser();
-    text = await loadText();
+    const text = await loadText();
     if (text === undefined || text === null)
         return '';
 
@@ -32,7 +13,7 @@ async function displayText() {
 
     for (el of text) {
         if (el.decorator.length !== 0) {
-            let child_node = document.createElement(el.decorator[0]);
+            const child_node = document.createElement(el.decorator[0]);
             el.decorator.shift();
 
             let inner = '';
@@ -45,14 +26,14 @@ async function displayText() {
                     inner += '</' + dec + '>';
                 child_node.innerHTML = inner;
             } else {
-                let child_text = document.createTextNode(el.text);
+                const child_text = document.createTextNode(el.text);
                 child_node.appendChild(child_text);
             }
 
             html_text.appendChild(child_node);
         } else {
-            let child_text_div = document.createElement('div');
-            let child_text = document.createTextNode(el.text);
+            const child_text_div = document.createElement('div');
+            const child_text = document.createTextNode(el.text);
             child_text_div.appendChild(child_text);
             html_text.appendChild(child_text_div);
         }
@@ -60,40 +41,31 @@ async function displayText() {
 
 }
 
-
-/**
- * Function for text deletion.
- * If any text is selected it is removed.
- * If no text is selected the whole text is removed.
- */
 function removeText() {
     if (window.getSelection()) {
-        let sel = window.getSelection();
+        const sel = window.getSelection();
         if (sel.getRangeAt && sel.rangeCount != 0) {
             range = sel.getRangeAt(0);
             range.deleteContents();
-            sel = window.getSelection ? window.getSelection() : document.selection;
             removeSelection();
-        }
-        else {
+        } else {
             let html_text = document.getElementById('text');
             html_text.innerHTML = '';
         }
     }
 }
 
-
 function styleSelectedText(dec) {
     if (window.getSelection) {
-        let sel = window.getSelection();
+        const sel = window.getSelection();
         if (sel.getRangeAt && sel.rangeCount) {
-            let range = sel.getRangeAt(0);
+            const range = sel.getRangeAt(0);
             let html = '<' + dec + '>' + range + '</' + dec + '>';
             range.deleteContents();
             let el = document.createElement("div");
             el.innerHTML = html;
-            let new_fragment = document.createDocumentFragment();
-            var node;
+            const new_fragment = document.createDocumentFragment();
+            let node;
             while (node = el.firstChild)
                 lastNode = new_fragment.appendChild(node);
 
@@ -104,12 +76,12 @@ function styleSelectedText(dec) {
 }
 
 function removeTags() {
-    let html_text = document.getElementById('text');
+    const html_text = document.getElementById('text');
     html_text.innerHTML = html_text.innerText.replaceAll("\n", "");  // Removes new lines which result from bullet points.
 }
 
 function removeSelection() {
-    let sel = window.getSelection ? window.getSelection() : document.selection;
+    const sel = window.getSelection ? window.getSelection() : document.selection;
     if (sel) {
         if (sel.removeAllRanges)
             sel.removeAllRanges();
@@ -118,15 +90,9 @@ function removeSelection() {
     }
 }
 
-
-/**
- * Function for parsing text.
- * It takes div containing editable text and parses into the structure corresponding to the JSON file.
- */
 function parseText() {
     let html_text = document.getElementById('text');
     let jsonData = [];
-
 
     for (child of html_text.childNodes) {
         let jsonObject = {};
@@ -134,12 +100,9 @@ function parseText() {
             jsonObject["text"] = child.textContent;
             jsonObject["decorator"] = [];
         } else {
-            let jsonObject = {};
-            jsonObject["text"] = child.innerHTML.replace(/(<([^>]+)>)/gi, "");
-
             decorators = [];
+            jsonObject["text"] = child.innerHTML.replace(/(<([^>]+)>)/gi, "");
             decorators.push(child.tagName.toLowerCase());
-
             child_nodes = child.childNodes;
             for (el of child_nodes)
                 if (el.tagName !== undefined)
@@ -147,15 +110,17 @@ function parseText() {
 
             jsonObject["decorator"] = decorators;
         }
-        jsonData.push(jsonObject);
+
+        if (jsonObject !== {})
+            jsonData.push(jsonObject);
     }
 
     return jsonData;
 }
 
-
 function saveText() {
     let parsed_text = parseText();
+    console.log(parsed_text)
     try {
         fetch('http://localhost:5000/saveText', {
             method: "POST",
@@ -170,7 +135,6 @@ function saveText() {
     }
 }
 
-
 function showManual() {
     let manual_div = document.getElementById("manual");
     if (manual_div.innerHTML !== '') {
@@ -178,7 +142,7 @@ function showManual() {
         return;
     }
 
-    let manual = "<p>Hello!</p><p>Top menu buttons:<br><b>B</b> - bolds selected text<br><i>I</i> - makes selected text italic<br>• - adds bullet points<br>trash can icon - removes all text</p><p>Bottom buttons:<br>Save - saves text<br>Reset - undo all the changes untill the last save</p>";
+    const manual = "<p>Hello!</p><p>Top menu buttons:<br><b>B</b> - bolds selected text<br><i>I</i> - makes selected text italic<br>• - adds bullet points<br>&#128465;&#65039; - removes selected text. If no text is selected - removes all text<br>&#129488; - displays manual</p><p>Bottom buttons:<br>Save - saves text<br>Reset - undo all the changes till the last save</p>";
     manual_div.innerHTML = manual;
 }
 
