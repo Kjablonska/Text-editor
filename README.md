@@ -10,7 +10,7 @@ The app does not support Internet Explorer, as it uses the fetch api. If the use
 # Run&build
   1. Go to the server directory and type in the terminal ```npm install node express```.   
       After all is installed execute: ```node server.js```.
-  2. Go to the browser and put index.html file there.
+  2. Go to the browser and put ```index.html``` file there.
 
 # Options:
 Top menu:
