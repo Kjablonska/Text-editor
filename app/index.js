@@ -93,17 +93,17 @@ function parseText() {
     const htmlText = document.getElementById('text');
     const jsonData = [];
 
-    for (const child of htmlText.childNodes) { // for const of
-        const jsonObject = {}; // const
+    for (const child of htmlText.childNodes) {
+        const jsonObject = {};
         if (child.nodeType == Node.TEXT_NODE) {
             jsonObject["text"] = child.textContent;
             jsonObject["decorator"] = [];
         } else {
-            const decorators = []; // const?
+            const decorators = [];
             jsonObject["text"] = child.innerHTML.replace(/(<([^>]+)>)/gi, "");
             decorators.push(child.tagName.toLowerCase());
             childNodes = child.childNodes;
-            for (const el of childNodes) // for const of
+            for (const el of childNodes)
                 if (el.tagName !== undefined)
                     decorators.push(el.tagName.toLowerCase());
 
@@ -118,7 +118,7 @@ function parseText() {
 }
 
 function saveText() {
-    const parsed_text = parseText(); // const
+    const parsed_text = parseText();
     try {
         fetch('http://localhost:5000/saveText', {
             method: "POST",
@@ -134,7 +134,7 @@ function saveText() {
 }
 
 function showManual() {
-    const manualDiv = document.getElementById("manual"); // const
+    const manualDiv = document.getElementById("manual");
     if (manualDiv.innerHTML !== '') {
         manualDiv.innerHTML = '';
         return;
