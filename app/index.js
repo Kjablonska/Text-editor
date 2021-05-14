@@ -1,7 +1,6 @@
 async function loadText() {
     const res = await fetch('http://localhost:5000/text');
-    text = await res.json();
-    return text;
+    return await res.json();
 }
 
 async function displayText() {
@@ -9,33 +8,33 @@ async function displayText() {
     if (text === undefined || text === null)
         return '';
 
-    let html_text = document.getElementById('text');
+    const htmlText = document.getElementById('text');
 
-    for (el of text) {
+    for (const el of text) {
         if (el.decorator.length !== 0) {
-            const child_node = document.createElement(el.decorator[0]);
+            const childNode = document.createElement(el.decorator[0]);
             el.decorator.shift();
 
             let inner = '';
-            for (dec of el.decorator)
+            for (const dec of el.decorator)
                 inner += '<' + dec + '>';
 
             if (inner !== '') {
                 inner += el.text;
-                for (dec of el.decorator)
+                for (const dec of el.decorator)
                     inner += '</' + dec + '>';
-                child_node.innerHTML = inner;
+                childNode.innerHTML = inner;
             } else {
-                const child_text = document.createTextNode(el.text);
-                child_node.appendChild(child_text);
+                const childText = document.createTextNode(el.text);
+                childNode.appendChild(childText);
             }
 
-            html_text.appendChild(child_node);
+            htmlText.appendChild(childNode);
         } else {
-            const child_text_div = document.createElement('div');
-            const child_text = document.createTextNode(el.text);
-            child_text_div.appendChild(child_text);
-            html_text.appendChild(child_text_div);
+            const childTextDiv = document.createElement('div');
+            const childText = document.createTextNode(el.text);
+            childTextDiv.appendChild(childText);
+            htmlText.appendChild(childTextDiv);
         }
     }
 
@@ -49,8 +48,8 @@ function removeText() {
             range.deleteContents();
             removeSelection();
         } else {
-            let html_text = document.getElementById('text');
-            html_text.innerHTML = '';
+            const htmlText = document.getElementById('text');
+            htmlText.innerHTML = '';
         }
     }
 }
@@ -60,24 +59,24 @@ function styleSelectedText(dec) {
         const sel = window.getSelection();
         if (sel.getRangeAt && sel.rangeCount) {
             const range = sel.getRangeAt(0);
-            let html = '<' + dec + '>' + range + '</' + dec + '>';
+            const html = '<' + dec + '>' + range + '</' + dec + '>';
             range.deleteContents();
-            let el = document.createElement("div");
+            const el = document.createElement("div");
             el.innerHTML = html;
-            const new_fragment = document.createDocumentFragment();
+            const newFragment = document.createDocumentFragment();
             let node;
             while (node = el.firstChild)
-                lastNode = new_fragment.appendChild(node);
+                lastNode = newFragment.appendChild(node);
 
-            range.insertNode(new_fragment);
+            range.insertNode(newFragment);
         }
         removeSelection();
     }
 }
 
 function removeTags() {
-    const html_text = document.getElementById('text');
-    html_text.innerHTML = html_text.innerText.replaceAll("\n", "");  // Removes new lines which result from bullet points.
+    const htmlText = document.getElementById('text');
+    htmlText.innerHTML = htmlText.innerText.replaceAll("\n", "");  // Removes new lines which result from bullet points.
 }
 
 function removeSelection() {
@@ -91,20 +90,20 @@ function removeSelection() {
 }
 
 function parseText() {
-    let html_text = document.getElementById('text');
-    let jsonData = [];
+    const htmlText = document.getElementById('text');
+    const jsonData = [];
 
-    for (child of html_text.childNodes) {
-        let jsonObject = {};
+    for (const child of htmlText.childNodes) { // for const of
+        const jsonObject = {}; // const
         if (child.nodeType == Node.TEXT_NODE) {
             jsonObject["text"] = child.textContent;
             jsonObject["decorator"] = [];
         } else {
-            decorators = [];
+            const decorators = []; // const?
             jsonObject["text"] = child.innerHTML.replace(/(<([^>]+)>)/gi, "");
             decorators.push(child.tagName.toLowerCase());
-            child_nodes = child.childNodes;
-            for (el of child_nodes)
+            childNodes = child.childNodes;
+            for (const el of childNodes) // for const of
                 if (el.tagName !== undefined)
                     decorators.push(el.tagName.toLowerCase());
 
@@ -119,8 +118,7 @@ function parseText() {
 }
 
 function saveText() {
-    let parsed_text = parseText();
-    console.log(parsed_text)
+    const parsed_text = parseText(); // const
     try {
         fetch('http://localhost:5000/saveText', {
             method: "POST",
@@ -131,19 +129,19 @@ function saveText() {
             body: JSON.stringify(parsed_text)
         });
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
 function showManual() {
-    let manual_div = document.getElementById("manual");
-    if (manual_div.innerHTML !== '') {
-        manual_div.innerHTML = '';
+    const manualDiv = document.getElementById("manual"); // const
+    if (manualDiv.innerHTML !== '') {
+        manualDiv.innerHTML = '';
         return;
     }
 
     const manual = "<p>Hello!</p><p>Top menu buttons:<br><b>B</b> - bolds selected text<br><i>I</i> - makes selected text italic<br>• - adds bullet points<br>&#128465;&#65039; - removes selected text. If no text is selected - removes all text<br>&#129488; - displays manual</p><p>Bottom buttons:<br>Save - saves text<br>Reset - undo all the changes till the last save</p>";
-    manual_div.innerHTML = manual;
+    manualDiv.innerHTML = manual;
 }
 
 const boldButton = document.getElementById('button-bold');
