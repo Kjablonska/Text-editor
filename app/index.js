@@ -1,3 +1,8 @@
+function loadData() {
+    if (checkBrowser)
+        loadText();
+}
+
 function checkBrowser() {
     let userAgentString = navigator.userAgent;
     let IExplorerAgent = userAgentString.indexOf("MSIE") > -1 || userAgentString.indexOf("rv:") > -1;
@@ -6,10 +11,10 @@ function checkBrowser() {
         let not_supported_text = "<p>Hello!</p><p>Your web browser is not supported. :( </p>";
         let not_supported = document.createTextNode(not_supported_text);
         browser_check.appendChild(not_supported);
-        return;
+        return false;
     }
+    return true;
 }
-
 
 async function loadText() {
     let res = await fetch('http://localhost:5000/text');
