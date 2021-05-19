@@ -1,5 +1,5 @@
 # Text editor
-Author: Karolina Jabłońska
+Simple text editor developed using vanilla JS and Node.js on backend side.
 
 # Description
 The aim of this project is to develop a simple text editor which supports bolding, italics and bullet points.  
