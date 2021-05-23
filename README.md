@@ -12,7 +12,7 @@ The app does not support Internet Explorer, as it uses the fetch api. If the use
       After all is installed execute: ```node server.js```.
   2. Go to the browser and put ```index.html``` file there.
 
-# Options:
+# Options
 Top menu:
   * <b>B</b>    -   bolds the selected text,
   * <i>I</i>    -   makes the selected text italic,
@@ -23,3 +23,8 @@ Top menu:
 Bottom buttons:
   * Save    -   saves the current text.
   * Reset   - restores the last saved text.
+
+
+# Demo
+
+![alt text](https://github.com/Kjablonska/Text-editor/blob/assets/text-editor.gif)
